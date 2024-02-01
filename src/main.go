@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	cepSearchCLI := http.CepSearchAPI{}
-	cepSearchCLI.Handle()
+	cepSearchAPI := http.CepSearchAPI{}
+	cepSearchAPI.Handle()
 }
