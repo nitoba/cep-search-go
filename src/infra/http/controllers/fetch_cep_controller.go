@@ -1,28 +1,29 @@
 package controllers
 
 import (
-	. "cep-search/src/domain/application/use_cases"
-	. "cep-search/src/infra/repositories"
+	usecases "cep-search/src/domain/application/use_cases"
+	repositories "cep-search/src/infra/repositories"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
 type cepSearchController struct {
-	fetchAddressUseCase FetchAddressUseCase
+	fetchAddressUseCase usecases.FetchAddressUseCase
 }
 
-func CreateFetchCepController() cepSearchController {
-	cepRepository := CreateViaCepRepository()
-	fetchAddressUseCase := CreateFetchAddressUseCase(cepRepository)
-	return cepSearchController{
+func CreateFetchCepController() *cepSearchController {
+	cepRepository := repositories.CreateViaCepRepository()
+	fetchAddressUseCase := usecases.CreateFetchAddressUseCase(cepRepository)
+	return &cepSearchController{
 		fetchAddressUseCase: fetchAddressUseCase,
 	}
 }
 
 func (c *cepSearchController) Handle(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
-	cep := req.URL.Query().Get("cep")
+	cep := req.PathValue("cep")
+	println(cep)
 	if cep == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		res.Write([]byte(`{"message": "cep is required"}`))
